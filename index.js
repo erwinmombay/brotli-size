@@ -7,7 +7,22 @@ var stream = require('stream');
  * @param {!Buffer|string} str
  * @param {!Object=} opt_params
  */
-module.exports.sync = function(str, opt_params) {
+function brotliSize(str, opt_params) {
+  if (typeof str == 'string') {
+    str = new Buffer(str, 'utf8');
+  }
+  return iltorb.compress(str, opt_params).then(function(result) {
+    return result.length;
+  });
+}
+
+module.exports = brotliSize;
+
+/**
+ * @param {!Buffer|string} str
+ * @param {!Object=} opt_params
+ */
+brotliSize.sync = function(str, opt_params) {
   if (typeof str == 'string') {
     str = new Buffer(str, 'utf8');
   }
@@ -18,7 +33,7 @@ module.exports.sync = function(str, opt_params) {
 /**
  * @param {!Object=} opt_params
  */
-module.exports.stream = function(opt_params) {
+brotliSize.stream = function(opt_params) {
   opt_params = opt_params || {};
   var input = new stream.PassThrough();
   var output = new stream.PassThrough();
