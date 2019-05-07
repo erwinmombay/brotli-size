@@ -12,11 +12,11 @@ export interface BrotliEncodeParams {
   quality?: number;
 }
 
-const bufferFormatter = (incoming: Buffer | string): Buffer => typeof incoming === 'string' ? new Buffer(incoming, 'utf8') : incoming;
-const optionFormatter = (passed: BrotliEncodeParams, toEncode?: Buffer): BrotliOptions => ({
+const bufferFormatter = (incoming: Buffer | string): Buffer => typeof incoming === 'string' ? Buffer.from(incoming, 'utf8') : incoming;
+const optionFormatter = (passed?: BrotliEncodeParams, toEncode?: Buffer): BrotliOptions => ({
   params: {
-    [brotliConstants.BROTLI_PARAM_MODE]: passed.mode || brotliConstants.BROTLI_DEFAULT_MODE,
-    [brotliConstants.BROTLI_PARAM_QUALITY]: passed.quality || brotliConstants.BROTLI_MAX_QUALITY,
+    [brotliConstants.BROTLI_PARAM_MODE]: passed && 'mode' in passed && passed.mode || brotliConstants.BROTLI_DEFAULT_MODE,
+    [brotliConstants.BROTLI_PARAM_QUALITY]: passed && 'quality' in passed && passed.quality || brotliConstants.BROTLI_MAX_QUALITY,
     [brotliConstants.BROTLI_PARAM_SIZE_HINT]: toEncode ? toEncode.byteLength : 0,
   }
 });
@@ -24,9 +24,9 @@ const optionFormatter = (passed: BrotliEncodeParams, toEncode?: Buffer): BrotliO
 /**
  * @param incoming Either a Buffer or string of the value to encode.
  * @param options Subset of Encoding Parameters.
- * @return Encoded Buffer.
+ * @return
  */
-export default async function size(incoming: Buffer | string, options: BrotliEncodeParams): Promise<Buffer> {
+async function size(incoming: Buffer | string, options?: BrotliEncodeParams): Promise<number> {
   const buffer = bufferFormatter(incoming);
 
   return new Promise(function(resolve, reject) {
@@ -34,7 +34,7 @@ export default async function size(incoming: Buffer | string, options: BrotliEnc
       if (error !== null) {
         reject(error);
       }
-      resolve(result);
+      resolve(result.byteLength);
     });
   });
 }
@@ -44,7 +44,7 @@ export default async function size(incoming: Buffer | string, options: BrotliEnc
  * @param options Subset of Encoding Parameters.
  * @return Length of encoded Buffer.
  */
-export function sync(incoming: Buffer | string, options: BrotliEncodeParams): number {
+function sync(incoming: Buffer | string, options?: BrotliEncodeParams): number {
   const buffer = bufferFormatter(incoming);
   return brotliCompressSync(buffer, optionFormatter(options, buffer)).byteLength;
 }
@@ -54,7 +54,7 @@ export function sync(incoming: Buffer | string, options: BrotliEncodeParams): nu
  * @param options 
  * @return PassThroughStream for the contents being compressed
  */
-export function stream(options: BrotliEncodeParams): PassThroughStream {
+function stream(options?: BrotliEncodeParams): PassThroughStream {
   const input = new PassThroughStream();
   const output = new PassThroughStream();
   const wrapper = duplexer(input, output);
@@ -65,10 +65,10 @@ export function stream(options: BrotliEncodeParams): PassThroughStream {
       size += buf.length;
     })
     .on('error', () => {
-      wrapper.size = 0;
+      wrapper.brotliSize = 0;
     })
     .on('end', () => {
-      wrapper.size = size;
+      wrapper.brotliSize = size;
       wrapper.emit('brotli-size', size);
       output.end();
     });
@@ -84,9 +84,9 @@ export function stream(options: BrotliEncodeParams): PassThroughStream {
  * @param options Subset of Encoding Parameters.
  * @return Promise that resolves with size of encoded file.
  */
-export async function file(path: string, options: BrotliEncodeParams): Promise<number> {
+async function file(path: string, options?: BrotliEncodeParams): Promise<number> {
   const file = await readFilePromise(path);
-  return (await size(file, options)).length;
+  return (await size(file, options));
 }
 
 /**
@@ -94,7 +94,13 @@ export async function file(path: string, options: BrotliEncodeParams): Promise<n
  * @param options Subset of Encoding Parameters.
  * @return size of encoded file.
  */
-export function fileSync(path: string, options: BrotliEncodeParams): number {
+function fileSync(path: string, options?: BrotliEncodeParams): number {
   const file = readFileSync(path);
   return sync(file, options);
 }
+
+size.sync = sync;
+size.stream = stream;
+size.file = file;
+size.fileSync = fileSync;
+export default size;

@@ -12,7 +12,9 @@
     "node": ">= 11"
   },
   "scripts": {
-    "test": "ava"
+    "build": "tsc -p tsconfig.json",
+    "pretest": "npm run build",
+    "test": "ava -v"
   },
   "files": [
     "index.js"

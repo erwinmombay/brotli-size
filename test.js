@@ -1,6 +1,6 @@
 import fs from 'fs';
 import test from 'ava';
-import brotliSize from './';
+import brotliSize from './dist/';
 
 const file = fs.readFileSync('test.js', 'utf8');
 
