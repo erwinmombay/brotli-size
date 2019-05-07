@@ -1,6 +1,6 @@
 {
   "name": "brotli-size",
-  "version": "0.0.3",
+  "version": "0.2.0",
   "description": "Get the brotli compressed size of a string or buffer",
   "license": "MIT",
   "repository": "erwinmombay/brotli-size",
@@ -14,10 +14,12 @@
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "pretest": "npm run build",
-    "test": "ava -v"
+    "test": "ava -v",
+    "release": "np",
+    "prepublishOnly": "npm run build"
   },
   "files": [
-    "index.js"
+    "dist"
   ],
   "keywords": [
     "size",
