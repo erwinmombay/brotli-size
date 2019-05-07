@@ -9,7 +9,7 @@
     "email": "erwin.mombay@gmail.com"
   },
   "engines": {
-    "node": ">=0.12.0"
+    "node": ">= 11"
   },
   "scripts": {
     "test": "ava"
@@ -24,10 +24,12 @@
     "compressed"
   ],
   "dependencies": {
-    "duplexer": "^0.1.1",
-    "iltorb": "^2.0.5"
+    "duplexer": "0.1.1"
   },
   "devDependencies": {
-    "ava": "^0.14.0"
+    "@types/node": "12.0.0",
+    "ava": "1.4.1",
+    "np": "5.0.1",
+    "typescript": "3.4.5"
   }
 }
