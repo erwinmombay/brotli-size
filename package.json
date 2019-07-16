@@ -9,13 +9,17 @@
     "email": "erwin.mombay@gmail.com"
   },
   "engines": {
-    "node": ">=0.12.0"
+    "node": ">= 10.16.0"
   },
   "scripts": {
-    "test": "ava"
+    "build": "tsc -p tsconfig.json",
+    "pretest": "npm run build",
+    "test": "ava -v",
+    "release": "np",
+    "prepublishOnly": "npm run build"
   },
   "files": [
-    "index.js"
+    "dist"
   ],
   "keywords": [
     "size",
@@ -24,10 +28,12 @@
     "compressed"
   ],
   "dependencies": {
-    "duplexer": "^0.1.1",
-    "iltorb": "^2.4.3"
+    "duplexer": "0.1.1"
   },
   "devDependencies": {
-    "ava": "^0.14.0"
+    "@types/node": "12.6.1",
+    "ava": "2.2.0",
+    "np": "5.0.1",
+    "typescript": "3.5.2"
   }
 }
