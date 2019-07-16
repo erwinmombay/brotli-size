@@ -24,7 +24,7 @@ const optionFormatter = (passed?: BrotliEncodeParams, toEncode?: Buffer): Brotli
 /**
  * @param incoming Either a Buffer or string of the value to encode.
  * @param options Subset of Encoding Parameters.
- * @return
+ * @return Promise that resolves with the encoded Buffer length.
  */
 async function size(incoming: Buffer | string, options?: BrotliEncodeParams): Promise<number> {
   const buffer = bufferFormatter(incoming);
@@ -50,7 +50,6 @@ function sync(incoming: Buffer | string, options?: BrotliEncodeParams): number {
 }
 
 /**
- * 
  * @param options 
  * @return PassThroughStream for the contents being compressed
  */
