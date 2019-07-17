@@ -4,6 +4,7 @@
   "description": "Get the brotli compressed size of a string or buffer",
   "license": "MIT",
   "repository": "erwinmombay/brotli-size",
+  "main": "dist/index.js",
   "author": {
     "name": "Erwin Mombay",
     "email": "erwin.mombay@gmail.com"
