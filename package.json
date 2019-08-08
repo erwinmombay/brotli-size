@@ -1,6 +1,6 @@
 {
   "name": "brotli-size",
-  "version": "3.0.1",
+  "version": "4.0.0",
   "description": "Get the brotli compressed size of a string or buffer",
   "license": "MIT",
   "repository": "erwinmombay/brotli-size",
