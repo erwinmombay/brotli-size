@@ -1,6 +1,7 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
+    "declaration": true,
     "lib": [
       "es2017"
     ],
@@ -14,7 +15,8 @@
     "strictNullChecks": true,
     "noImplicitAny": true,
     "noImplicitThis": true,
-    "alwaysStrict": true
+    "alwaysStrict": true,
+    "incremental": true
   },
   "include": [
     "**/*.ts"
