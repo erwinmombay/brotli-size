@@ -24,9 +24,9 @@ const optionFormatter = (passed?: BrotliEncodeParams, toEncode?: Buffer): Brotli
 /**
  * @param incoming Either a Buffer or string of the value to encode.
  * @param options Subset of Encoding Parameters.
- * @return
+ * @return Promise that resolves with the encoded Buffer length.
  */
-async function size(incoming: Buffer | string, options?: BrotliEncodeParams): Promise<number> {
+export default async function size(incoming: Buffer | string, options?: BrotliEncodeParams): Promise<number> {
   const buffer = bufferFormatter(incoming);
 
   return new Promise(function(resolve, reject) {
@@ -44,17 +44,16 @@ async function size(incoming: Buffer | string, options?: BrotliEncodeParams): Pr
  * @param options Subset of Encoding Parameters.
  * @return Length of encoded Buffer.
  */
-function sync(incoming: Buffer | string, options?: BrotliEncodeParams): number {
+export function sync(incoming: Buffer | string, options?: BrotliEncodeParams): number {
   const buffer = bufferFormatter(incoming);
   return brotliCompressSync(buffer, optionFormatter(options, buffer)).byteLength;
 }
 
 /**
- * 
  * @param options 
  * @return PassThroughStream for the contents being compressed
  */
-function stream(options?: BrotliEncodeParams): PassThroughStream {
+export function stream(options?: BrotliEncodeParams): PassThroughStream {
   const input = new PassThroughStream();
   const output = new PassThroughStream();
   const wrapper = duplexer(input, output);
@@ -84,7 +83,7 @@ function stream(options?: BrotliEncodeParams): PassThroughStream {
  * @param options Subset of Encoding Parameters.
  * @return Promise that resolves with size of encoded file.
  */
-async function file(path: string, options?: BrotliEncodeParams): Promise<number> {
+export async function file(path: string, options?: BrotliEncodeParams): Promise<number> {
   const file = await readFilePromise(path);
   return (await size(file, options));
 }
@@ -94,13 +93,7 @@ async function file(path: string, options?: BrotliEncodeParams): Promise<number>
  * @param options Subset of Encoding Parameters.
  * @return size of encoded file.
  */
-function fileSync(path: string, options?: BrotliEncodeParams): number {
+export function fileSync(path: string, options?: BrotliEncodeParams): number {
   const file = readFileSync(path);
   return sync(file, options);
 }
-
-size.sync = sync;
-size.stream = stream;
-size.file = file;
-size.fileSync = fileSync;
-export default size;

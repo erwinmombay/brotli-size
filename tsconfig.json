@@ -1,6 +1,7 @@
 {
   "compileOnSave": true,
   "compilerOptions": {
+    "declaration": true,
     "lib": [
       "es2017"
     ],
