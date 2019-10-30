@@ -19,6 +19,8 @@ console.log(str.length); // 165
 console.log(brotliSize.sync(str)); // 118
 ```
 
+*Note*: You must be running node >= `10.16` to use this module. If you're using an older version of node, we recommend upgrading to the latest active LTS release.
+
 ## API
 
 ### brotliSize.sync(input)
@@ -31,6 +33,7 @@ Type: `string`, `buffer`
 
 Returns a passthrough stream. The stream emits a `brotli-size` event and
 has a `brotliSize` property.
+
 ## Related
 
 - [gzip-size](https://github.com/sindresorhus/gzip-size) - Heavily inspired by
